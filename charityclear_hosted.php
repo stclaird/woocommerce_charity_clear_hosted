@@ -157,7 +157,7 @@ function init_charity_clear_hosted() {
 			global $woocommerce;
 			
 			$order = new WC_Order( $order_id );
-			$amount = $order->get_order_total();
+			$amount = $order->get_total();
             $amount = number_format((float)$amount, 2, '.', '');
 			
             //$redirect_url = WC()->api_request_url( 'WC_charity_clear_hosted' );
