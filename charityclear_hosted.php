@@ -2,8 +2,8 @@
 /*
 Plugin Name: Charity Clear Hosted Form Gateway 
 Description: Interfaces with Charity Clear Hosted Gateway
-Version: 1.0
-Author URI: http://www.princesssparkle.co.uk
+Version: 1.1
+Author URI: http://www.wildchief.uk
 */
 
 add_action('plugins_loaded', 'init_charity_clear_hosted', 0);
@@ -37,7 +37,6 @@ function init_charity_clear_hosted() {
 			$this->signature_key = $this->settings['signature_key'];
 			$this->gateway_url = $this->settings['gateway_url'];
 			$this->success_url = $this->settings['success_url'];
-			$this->transation_prefix = $this->settings['transation_prefix'];
 			
 			// Actions
 			add_action('woocommerce_update_options_payment_gateways_'.$this->id, array($this, 'process_admin_options'));
@@ -48,74 +47,67 @@ function init_charity_clear_hosted() {
 		function init_form_fields() {
 			
 			$this->form_fields = array(
-                                          'enabled' => array(
-                                                'title' => __( 'Enable/Disable', 'woothemes' ),
-                                                'type' => 'checkbox',
-                                                'label' => __( 'Enable Charity Clear Payment', 'woothemes' ),
-                                                'default' => 'yes'
-                                            ),
+                      'enabled' => array(
+                      'title' => __( 'Enable/Disable', 'woothemes' ),
+                      'type' => 'checkbox',
+                      'label' => __( 'Enable Charity Clear Payment', 'woothemes' ),
+                      'default' => 'yes'
+                      ),
 
-                                          'title' => array(
-                                                'title' => __( 'Title', 'woothemes' ),
-                                                'type' => 'text',
-                                                'description' => __( 'This controls the title the user sees during checkout.', 'woothemes' ),
-                                                'default' => __( 'Credit Card via Charity Clear', 'woothemes' )
-                                            ),
+                      'title' => array(
+                      'title' => __( 'Title', 'woothemes' ),
+                      'type' => 'text',
+                      'description' => __( 'This controls the title the user sees during checkout.', 'woothemes' ),
+                      'default' => __( 'Credit Card via Charity Clear', 'woothemes' )
+                      ),
 
-                                         'description' => array(
-                                                'title' => __( 'Customer Message', 'woothemes' ),
-                                                'type' => 'textarea',
-                                                'description' => __( 'Accepts credit and debit card payments.', 'woothemes' ),
-                                                'default' => 'Please proceed to Charity Clear to complete this transaction.'
-                                            ),
-										   'merchant_id' => array(
-										  'title' => __( 'Your Merchant ID', 'woocommerce' ),
-										  'type' => 'textarea',
-										  'description' => __( 'Your Merchant ID Supplied by Charity Clear.', 'woocommerce' ),
-										  'default' => __("100003", 'woocommerce')
-										   ),
-										   
-										   'currency_id' => array(
-										  'title' => __( 'Your Currency ID', 'woocommerce' ),
-										  'type' => 'textarea',
-										  'description' => __( 'Your Currency ID Supplied by Charity Clear.', 'woocommerce' ),
-										  'default' => __("826", 'woocommerce')
-										   ),   
-										  
-										'country_id' => array(
-										  'title' => __( 'Your Country ID', 'woocommerce' ),
-										  'type' => 'textarea',
-										  'description' => __( 'Your Country ID Supplied by Charity Clear.', 'woocommerce' ),
-										  'default' => __("826", 'woocommerce')
-										   ),  
-										
-										'signature_key' => array(
-										  'title' => __( 'Your Secret Key', 'woocommerce' ),
-										  'type' => 'textarea',
-										  'description' => __( 'This is the signature key you set in your merchant centre.', 'woocommerce' ),
-										  'default' => __("yoursecretk3y", 'woocommerce')
-										   ), 
-										   
-										'gateway_url' => array(
-										  'title' => __( 'Payment Gateway URL', 'woocommerce' ),
-										  'type' => 'textarea',
-										  'description' => __( 'This is the url for the charity clear payment gateway - you might need to change this if you need to brand your form', 'woocommerce' ),
-										  'default' => __("https://gateway.charityclear.com/paymentform/", 'woocommerce')
-										   ),
-									
-										'success_url' => array(
-											'title' => __( 'Success URL', 'woothemes' ),
-											'type' => 'text',
-											'description' => __( 'For example, http://yourdomain.com/thank-you. If a page doesn\'t exist, create one.', 'woothemes' ),
-											'default' => __( '' , 'woothemes' )
-										),
-										
-										'transation_prefix' => array(
-											'title' => __( 'Transation Prefix', 'woothemes' ),
-											'type' => 'text',
-											'description' => __( 'Enter a prefix for you transactions. This will help you identify them in the Charity Clear MM', 'woothemes' ),
-											'default' => __( 'MyStore' , 'woothemes' )
-										),
+                      'description' => array(
+                      'title' => __( 'Customer Message', 'woothemes' ),
+                      'type' => 'textarea',
+                      'description' => __( 'Accepts credit and debit card payments.', 'woothemes' ),
+                      'default' => 'Please proceed to Charity Clear to complete this transaction.'
+                       ),
+                      'merchant_id' => array(
+					  'title' => __( 'Your Merchant ID', 'woocommerce' ),
+					  'type' => 'textarea',
+					  'description' => __( 'Your Merchant ID Supplied by Charity Clear.', 'woocommerce' ),
+					  'default' => __("100003", 'woocommerce')
+					   ),
+					   
+                      'currency_id' => array(
+					  'title' => __( 'Your Currency ID', 'woocommerce' ),
+					  'type' => 'textarea',
+					  'description' => __( 'Your Currency ID Supplied by Charity Clear.', 'woocommerce' ),
+					  'default' => __("826", 'woocommerce')
+					   ),   
+					  
+					'country_id' => array(
+					  'title' => __( 'Your Country ID', 'woocommerce' ),
+					  'type' => 'textarea',
+					  'description' => __( 'Your Country ID Supplied by Charity Clear.', 'woocommerce' ),
+					  'default' => __("826", 'woocommerce')
+					   ),  
+					
+					'signature_key' => array(
+					  'title' => __( 'Your Secret Key', 'woocommerce' ),
+					  'type' => 'textarea',
+					  'description' => __( 'This is the signature key you set in your merchant centre.', 'woocommerce' ),
+					  'default' => __("yoursecretk3y", 'woocommerce')
+					   ), 
+					   
+					'gateway_url' => array(
+					  'title' => __( 'Payment Gateway URL', 'woocommerce' ),
+					  'type' => 'textarea',
+					  'description' => __( 'This is the url for the charity clear payment gateway - you might need to change this if you need to brand your form', 'woocommerce' ),
+					  'default' => __("https://gateway.charityclear.com/paymentform/", 'woocommerce')
+					   ),
+				
+					'success_url' => array(
+						'title' => __( 'Success URL', 'woothemes' ),
+						'type' => 'text',
+						'description' => __( 'For example, http://yourdomain.com/thank-you. If a page doesn\'t exist, create one.', 'woothemes' ),
+						'default' => __( '' , 'woothemes' )
+					),
 			);
 			
 		}
@@ -160,7 +152,6 @@ function init_charity_clear_hosted() {
 			$amount = $order->get_total();
             $amount = number_format((float)$amount, 2, '.', '');
 			
-            //$redirect_url = WC()->api_request_url( 'WC_charity_clear_hosted' );
             $redirect_url = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_charity_clear_hosted', home_url( '/' ) ) );
 			$preshared_key = $this->signature_key;
 			
@@ -179,7 +170,6 @@ function init_charity_clear_hosted() {
             ksort($putArray);
                         
 			$signature = hash("SHA512", http_build_query($putArray) . $preshared_key);
-     			 
                         
 			$gateway_url = $this->gateway_url;
 
@@ -204,7 +194,7 @@ function init_charity_clear_hosted() {
 					$order->shipping_address_2,
 					$order->billing_state,
 					$order->billing_country,
-					
+				
 					));
 		  return $address_out;
 	}
@@ -216,9 +206,7 @@ function init_charity_clear_hosted() {
   	   return $string;
 	}
         
-
 }
-
 
 // Add the gateway to woo
 function add_charity_clear_gateway( $methods ) {
@@ -231,6 +219,8 @@ add_filter('woocommerce_payment_gateways', 'add_charity_clear_gateway' );
 add_action('init', 'check_charity_clear_response');
 
 function check_charity_clear_response() {
+	@ob_clean();
+	header( 'HTTP/1.1 200 OK' );
 	
 	if (isset($_REQUEST["signature"])) {
                 $returned_post = $_POST;
@@ -240,19 +230,15 @@ function check_charity_clear_response() {
                 
                 $response_code = $returned_post['responseCode'];
                 $response_message = $returned_post['responseMessage'];
-		$display_amount = $returned_post['displayAmount'];
+		        $display_amount = $returned_post['displayAmount'];
                 $charity_clear = new WC_charity_clear_hosted;
-                global $woocommerce;
-                
                 $signature_hash = signature_hash($returned_post, $returned_signature, $charity_clear->signature_key);
                 echo "<br>Signature:".$returned_signature."<br>";
                 echo "<br>Computed Hash:".$signature_hash."<br>";
                 $compared_hash = check_hash($returned_signature, $signature_hash);
                 if ($compared_hash == true) {
-                    
                     $order_id = $returned_post['transactionUnique'];
-                    $order = new WC_Order($order_id);
-                  
+                    $order = wc_get_order( $order_id);
                     if ($response_code == 0) {
                         
                         $msg['message'] = "Thank you for shopping with us. Your account has been charged and your transaction is successful. We will be shipping your order to you soon.";
@@ -260,9 +246,11 @@ function check_charity_clear_response() {
                         $order->add_order_note('Response Message: '.$response_message);
                         $order->add_order_note('Amount: '.$display_amount);
 						
-                        $woocommerce -> cart -> empty_cart();
-                        $redirect_url = $order->get_checkout_order_received_url();
-						$order->payment_complete();
+                        WC()->cart->empty_cart();
+                        wp_redirect( wc_get_page_permalink( 'cart' ) );
+                        $redirect_url = get_permalink(woocommerce_get_page_id('cart'));
+                        
+			$order->payment_complete();
 
                     } else {
                         $msg['class'] = 'error';
@@ -272,21 +260,20 @@ function check_charity_clear_response() {
 
                     }
                     
-     
+
                 }
                wc_add_notice( $msg['message'], $msg['class'] );
-               
                wp_redirect( $redirect_url );
-                
+               exit(); 
          }
          
 
 }
 
-        /*
-        *  
-        * The following function create a hash from the data sent back from Charity Clear 
-        */
+    /*
+    *  
+    * The following function create a hash from the data sent back from Charity Clear 
+    */
     function signature_hash($returned_post, $signature, $pre_shared_key) {
         
         ksort($returned_post); // sort it
@@ -298,7 +285,7 @@ function check_charity_clear_response() {
         return $our_hash;
    }
 
-       function check_hash($returned_hash,$signature_hash) {
+    function check_hash($returned_hash,$signature_hash) {
         
          if ($returned_hash == $signature_hash) {
              return true;
