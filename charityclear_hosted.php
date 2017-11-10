@@ -32,8 +32,8 @@ function init_charity_clear_hosted() {
 			$this->description = $this->settings['description'];
 			$this->pay_description = $this->settings['pay_description'];
 			$this->merchant_id = $this->settings['merchant_id'];
-            $this->currency_id = $this->settings['currency_id'];
-            $this->country_id = $this->settings['country_id'];
+                        $this->currency_id = $this->settings['currency_id'];
+                        $this->country_id = $this->settings['country_id'];
 			$this->signature_key = $this->settings['signature_key'];
 			$this->gateway_url = $this->settings['gateway_url'];
 			$this->success_url = $this->settings['success_url'];
@@ -150,14 +150,14 @@ function init_charity_clear_hosted() {
 			
 			$order = new WC_Order( $order_id );
 			$amount = $order->get_total();
-            $amount = number_format((float)$amount, 2, '.', '');
+                        $amount = number_format((float)$amount, 2, '.', '');
 			
-            $redirect_url = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_charity_clear_hosted', home_url( '/' ) ) );
+                        $redirect_url = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_charity_clear_hosted', home_url( '/' ) ) );
 			$preshared_key = $this->signature_key;
 			
 			$putArray['merchantID'] = $this->merchant_id;
-            $putArray['countryCode'] = $this->country_id;
-            $putArray['currencyCode'] = $this->currency_id;
+                        $putArray['countryCode'] = $this->country_id;
+                        $putArray['currencyCode'] = $this->currency_id;
 			$putArray['type'] = 1;
 			$putArray['amount'] = $amount;
 			$putArray['transactionUnique'] = $order_id;
@@ -166,8 +166,9 @@ function init_charity_clear_hosted() {
 			$putArray['customerEmail'] = $order->billing_email;
 			$putArray['customerAddress'] = $this->charity_clear_buildaddress($order);
 			$putArray['customerPostcode'] = $order->billing_postcode;
-			
-            ksort($putArray);
+			$putArray['post_type'] = "product"; #WooCommerce Appears to inject this after we create the signature so we need to add it here
+                        $putArray['s'] = ""; #And this. Or the signature fails.
+                        ksort($putArray);
                         
 			$signature = hash("SHA512", http_build_query($putArray) . $preshared_key);
                         
