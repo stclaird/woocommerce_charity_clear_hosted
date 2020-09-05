@@ -32,8 +32,8 @@ function init_charity_clear_hosted() {
 			$this->description = $this->settings['description'];
 			$this->pay_description = $this->settings['pay_description'];
 			$this->merchant_id = $this->settings['merchant_id'];
-                        $this->currency_id = $this->settings['currency_id'];
-                        $this->country_id = $this->settings['country_id'];
+            $this->currency_id = $this->settings['currency_id'];
+            $this->country_id = $this->settings['country_id'];
 			$this->signature_key = $this->settings['signature_key'];
 			$this->gateway_url = $this->settings['gateway_url'];
 			$this->success_url = $this->settings['success_url'];
@@ -122,7 +122,7 @@ function init_charity_clear_hosted() {
 			?>
 			</table>
 			<?php
-		}
+		} 
 
 		function payment_fields() {
 			if ($this->description) echo wpautop(wptexturize($this->description));
@@ -130,11 +130,12 @@ function init_charity_clear_hosted() {
 		
 		function process_payment( $order_id ) {
 			
-			$order = &new WC_Order( $order_id );
-			
+			$order = new WC_Order( $order_id );
+			$payment_url = $order->get_checkout_order_received_url();
+
 			return array(
 				'result' 	=> 'success',
-				'redirect'	=> add_query_arg('order', $order->id, add_query_arg('key', $order->order_key, get_permalink(woocommerce_get_page_id('pay'))))
+				'redirect'	=> add_query_arg('order', $order->get_id(), add_query_arg('key', $order->get_order_key(),  $payment_url   ))
 			);
 			
 		}
@@ -156,8 +157,8 @@ function init_charity_clear_hosted() {
 			$preshared_key = $this->signature_key;
 			
 			$putArray['merchantID'] = $this->merchant_id;
-                        $putArray['countryCode'] = $this->country_id;
-                        $putArray['currencyCode'] = $this->currency_id;
+            $putArray['countryCode'] = $this->country_id;
+            $putArray['currencyCode'] = $this->currency_id;
 			$putArray['type'] = 1;
 			$putArray['amount'] = $amount;
 			$putArray['transactionUnique'] = $order_id;
@@ -166,8 +167,8 @@ function init_charity_clear_hosted() {
 			$putArray['customerEmail'] = $order->billing_email;
 			$putArray['customerAddress'] = $this->charity_clear_buildaddress($order);
 			$putArray['customerPostcode'] = $order->billing_postcode;
-			$putArray['post_type'] = "product"; #WooCommerce Appears to inject this after we create the signature so we need to add it here
-                        $putArray['s'] = ""; #And this. Or the signature fails.
+			$putArray['post_type'] = "product";
+                        $putArray['s'] = "";
                         ksort($putArray);
                         
 			$signature = hash("SHA512", http_build_query($putArray) . $preshared_key);
@@ -181,8 +182,8 @@ function init_charity_clear_hosted() {
 			$output.= $this->charity_clear_addfields($putArray);
 			 
 			$output.= '
-                         <input type="hidden" name ="signature" value="'.$signature.'"/>
-     			 <input type="submit" value="PROCEED TO PAYMENT">
+                <input type="hidden" name ="signature" value="'.$signature.'"/>
+     			<input type="submit" value="PROCEED TO PAYMENT">
 			</div>';
 			
 			return $output;
